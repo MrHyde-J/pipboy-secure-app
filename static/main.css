@@ -1,0 +1,290 @@
+/* =========================================== */
+/* ADDITIONAL STYLES FOR UPDATED EFFECTS */
+/* =========================================== */
+
+/* Sound visualizer for audio effects */
+.sound-wave {
+    display: none; /* Hidden by default, can be shown for debug */
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 100px;
+    height: 50px;
+    z-index: 10000;
+}
+
+/* Enhanced selection colors */
+::selection {
+    background-color: rgba(0, 255, 0, 0.5);
+    color: var(--pipboy-highlight);
+    text-shadow: 0 0 5px var(--pipboy-glow);
+}
+
+::-moz-selection {
+    background-color: rgba(0, 255, 0, 0.5);
+    color: var(--pipboy-highlight);
+    text-shadow: 0 0 5px var(--pipboy-glow);
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 30, 0, 0.3);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, 
+        var(--pipboy-green), 
+        var(--pipboy-highlight)
+    );
+    border-radius: 6px;
+    border: 2px solid rgba(0, 30, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, 
+        var(--pipboy-highlight), 
+        var(--pipboy-green)
+    );
+    box-shadow: 0 0 10px var(--pipboy-glow);
+}
+
+/* Print styles enhancement */
+@media print {
+    .glowing, .meter-glow, .input-beep, .password-toggle {
+        display: none !important;
+    }
+    
+    .pipboy-screen {
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+    }
+    
+    .result-item, .dashboard-card, .user-item {
+        break-inside: avoid;
+    }
+}
+
+/* Accessibility: Focus styles */
+.pipboy-btn:focus,
+.pipboy-input:focus,
+.nav-item:focus {
+    outline: 3px solid var(--pipboy-highlight);
+    outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .scanlines,
+    .terminal-header::before,
+    .dashboard-card::before {
+        animation: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --pipboy-green: #00FF00;
+        --pipboy-highlight: #FFFFFF;
+        --pipboy-text: #FFFFFF;
+    }
+    
+    .pipboy-screen {
+        border: 3px solid #FFFFFF;
+    }
+}
+
+/* Dark mode support (already dark, but for consistency) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --pipboy-bg: #000000;
+        --pipboy-dark: #001100;
+    }
+}
+
+/* Performance optimizations */
+.will-change-transform {
+    will-change: transform;
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}
+
+/* Loading states */
+.is-loading {
+    opacity: 0.7;
+    pointer-events: none;
+    position: relative;
+}
+
+.is-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--pipboy-green);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Form validation states */
+.is-valid {
+    border-color: var(--pipboy-success) !important;
+    background-color: rgba(0, 255, 0, 0.05) !important;
+}
+
+.is-invalid {
+    border-color: var(--pipboy-error) !important;
+    background-color: rgba(255, 51, 0, 0.05) !important;
+}
+
+/* Tooltip enhancement */
+.tooltip {
+    position: relative;
+}
+
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background-color: rgba(0, 40, 0, 0.95);
+    color: var(--pipboy-text);
+    border: 1px solid var(--pipboy-green);
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 1000;
+    font-size: 0.9em;
+    pointer-events: none;
+}
+
+/* Password strength color classes */
+.password-strength-0 { color: var(--pipboy-error) !important; }
+.password-strength-1 { color: #FF9900 !important; }
+.password-strength-2 { color: #FFFF00 !important; }
+.password-strength-3 { color: #99FF33 !important; }
+.password-strength-4 { color: var(--pipboy-success) !important; }
+
+/* Animation delay utilities */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Stagger animations for lists */
+.stagger-animation li {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+.stagger-animation li:nth-child(1) { animation-delay: 100ms; }
+.stagger-animation li:nth-child(2) { animation-delay: 200ms; }
+.stagger-animation li:nth-child(3) { animation-delay: 300ms; }
+.stagger-animation li:nth-child(4) { animation-delay: 400ms; }
+.stagger-animation li:nth-child(5) { animation-delay: 500ms; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Error page animations */
+.error-page {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.error-code {
+    font-size: 8em;
+    color: var(--pipboy-error);
+    text-shadow: 0 0 20px currentColor;
+    animation: error-pulse 2s infinite;
+}
+
+@keyframes error-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Success animations */
+.success-animation {
+    animation: success-bounce 0.5s ease;
+}
+
+@keyframes success-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Warning animations */
+.warning-pulse {
+    animation: warning-pulse 2s infinite;
+}
+
+@keyframes warning-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Responsive text sizes */
+@media (max-width: 480px) {
+    .terminal-header h1 {
+        font-size: 1.3em;
+    }
+    
+    .result-item .value {
+        font-size: 1.1em;
+    }
+    
+    .pipboy-btn {
+        padding: 10px 15px;
+        font-size: 1em;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .pipboy-btn:hover,
+    .nav-item:hover,
+    .dashboard-card:hover {
+        transform: none !important;
+    }
+    
+    .pipboy-btn:active,
+    .nav-item:active {
+        transform: scale(0.98) !important;
+    }
+    
+    /* Larger touch targets */
+    .pipboy-btn,
+    .nav-item,
+    .password-toggle {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}

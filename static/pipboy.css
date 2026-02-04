@@ -1,0 +1,665 @@
+/* Fallout Pip-Boy 3000 Theme */
+:root {
+    --pipboy-green: #00FF00;
+    --pipboy-dark: #001100;
+    --pipboy-glow: rgba(0, 255, 0, 0.7);
+    --pipboy-border: #003300;
+    --pipboy-text: #00CC00;
+    --pipboy-highlight: #FFFF00;
+    --pipboy-crt: rgba(0, 255, 0, 0.15);
+    --pipboy-error: #FF3300;
+    --pipboy-success: #00FF00;
+    --pipboy-bg: #000000;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--pipboy-bg);
+    font-family: 'Courier New', 'Monaco', monospace;
+    color: var(--pipboy-text);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* CRT Monitor Effect */
+.crt::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 999;
+    pointer-events: none;
+}
+
+/* Main Screen Container */
+.pipboy-screen {
+    background-color: var(--pipboy-dark);
+    border: 3px solid var(--pipboy-border);
+    border-radius: 5px;
+    padding: 20px;
+    position: relative;
+    box-shadow: 
+        0 0 20px var(--pipboy-glow),
+        inset 0 0 20px rgba(0, 255, 0, 0.1);
+    max-width: 900px;
+    margin: 20px auto;
+    min-height: 80vh;
+}
+
+/* Terminal Header */
+.terminal-header {
+    text-align: center;
+    border-bottom: 2px dashed var(--pipboy-green);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px var(--pipboy-glow);
+    position: relative;
+}
+
+.terminal-header h1 {
+    color: var(--pipboy-green);
+    font-size: 1.8em;
+    margin: 0;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    color: var(--pipboy-text);
+    font-size: 0.9em;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+/* Input Fields */
+.pipboy-input {
+    background-color: rgba(0, 20, 0, 0.8);
+    border: 2px solid var(--pipboy-green);
+    color: var(--pipboy-green);
+    padding: 12px 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.pipboy-input:focus {
+    outline: none;
+    box-shadow: 0 0 15px var(--pipboy-glow);
+    border-color: var(--pipboy-highlight);
+}
+
+.input-group {
+    position: relative;
+    margin: 20px 0;
+}
+
+/* Buttons */
+.pipboy-btn {
+    background-color: rgba(0, 40, 0, 0.8);
+    border: 2px solid var(--pipboy-green);
+    color: var(--pipboy-text);
+    padding: 12px 25px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    margin: 10px 5px;
+}
+
+.pipboy-btn:hover {
+    background-color: rgba(0, 60, 0, 0.9);
+    border-color: var(--pipboy-highlight);
+    box-shadow: 0 0 10px var(--pipboy-glow);
+    transform: translateY(-2px);
+}
+
+.pipboy-btn:active {
+    transform: translateY(0);
+}
+
+.pipboy-btn-primary {
+    background-color: rgba(0, 60, 0, 0.9);
+    border-color: var(--pipboy-highlight);
+}
+
+/* Forms */
+.auth-form {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: rgba(0, 30, 0, 0.7);
+    border: 2px solid var(--pipboy-green);
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--pipboy-text);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.dashboard-card {
+    background-color: rgba(0, 40, 0, 0.3);
+    border: 1px solid var(--pipboy-border);
+    padding: 20px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    border-color: var(--pipboy-green);
+    box-shadow: 0 0 10px var(--pipboy-glow);
+}
+
+.dashboard-card h3 {
+    color: var(--pipboy-highlight);
+    border-bottom: 1px solid var(--pipboy-green);
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* Strength Meter */
+.strength-meter {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: rgba(0, 30, 0, 0.5);
+    border: 1px solid var(--pipboy-border);
+    border-radius: 3px;
+}
+
+.meter-visual {
+    height: 25px;
+    background-color: #002200;
+    border: 1px solid var(--pipboy-green);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 2px;
+}
+
+.meter-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, 
+        var(--pipboy-error) 0%,
+        #FF9900 25%,
+        #FFFF00 50%,
+        var(--pipboy-success) 100%
+    );
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.meter-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    color: var(--pipboy-text);
+    opacity: 0.8;
+    margin-top: 10px;
+}
+
+/* Analysis Results */
+.analysis-results {
+    border-top: 2px dashed var(--pipboy-green);
+    padding-top: 25px;
+    margin-top: 25px;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--pipboy-border);
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.result-item {
+    padding: 15px;
+    background-color: rgba(0, 40, 0, 0.3);
+    border-left: 3px solid var(--pipboy-green);
+    border-radius: 2px;
+}
+
+.result-item .label {
+    color: #88FF88;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.result-item .value {
+    color: var(--pipboy-highlight);
+    font-size: 1.3em;
+    font-weight: bold;
+    text-shadow: 0 0 5px currentColor;
+}
+
+/* Flash Messages */
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.flash-message {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: rgba(0, 40, 0, 0.9);
+    border: 1px solid var(--pipboy-green);
+    border-left: 4px solid var(--pipboy-highlight);
+    color: var(--pipboy-text);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Alert Boxes */
+.alert {
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 3px;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background-color: rgba(0, 60, 0, 0.3);
+    border-color: var(--pipboy-success);
+    color: var(--pipboy-success);
+}
+
+.alert-warning {
+    background-color: rgba(255, 153, 0, 0.2);
+    border-color: #FF9900;
+    color: #FF9900;
+}
+
+.alert-error {
+    background-color: rgba(255, 51, 0, 0.2);
+    border-color: var(--pipboy-error);
+    color: var(--pipboy-error);
+}
+
+.alert-info {
+    background-color: rgba(0, 153, 255, 0.2);
+    border-color: #0099FF;
+    color: #0099FF;
+}
+
+/* Links */
+a {
+    color: var(--pipboy-highlight);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--pipboy-green);
+    text-shadow: 0 0 5px var(--pipboy-glow);
+}
+
+/* Vault-Tec Logo */
+.vault-tec-logo {
+    text-align: center;
+    margin-top: 40px;
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+.vault-tec-logo pre {
+    margin: 0;
+    line-height: 1.4;
+    color: var(--pipboy-text);
+}
+
+/* Navigation */
+.pipboy-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--pipboy-green);
+    margin-bottom: 25px;
+    background-color: rgba(0, 30, 0, 0.3);
+    padding: 15px;
+    border-radius: 3px;
+}
+
+.nav-item {
+    padding: 12px 25px;
+    text-decoration: none;
+    color: var(--pipboy-text);
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.nav-item:hover {
+    border-color: var(--pipboy-green);
+    background-color: rgba(0, 255, 0, 0.1);
+    text-shadow: 0 0 5px var(--pipboy-glow);
+}
+
+.nav-item.active {
+    background-color: rgba(0, 255, 0, 0.2);
+    border-color: var(--pipboy-green);
+    color: var(--pipboy-highlight);
+}
+
+/* Admin Panel */
+.admin-panel {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.admin-sidebar {
+    background-color: rgba(0, 40, 0, 0.5);
+    padding: 20px;
+    border-right: 2px solid var(--pipboy-green);
+    border-radius: 3px;
+}
+
+.admin-content {
+    padding: 20px;
+    background-color: rgba(0, 30, 0, 0.3);
+    border-radius: 3px;
+}
+
+.user-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-item {
+    padding: 15px;
+    margin: 10px 0;
+    background-color: rgba(0, 20, 0, 0.3);
+    border: 1px solid var(--pipboy-border);
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-item.admin {
+    border-left: 4px solid var(--pipboy-highlight);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pipboy-screen {
+        margin: 10px;
+        padding: 10px;
+    }
+    
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-panel {
+        grid-template-columns: 1fr;
+    }
+    
+    .pipboy-nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .nav-item {
+        text-align: center;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* Enhanced CRT Phosphor Trail Effect */
+.crt::before {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+    ), 
+    radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 20, 0, 0.2) 100%
+    );
+    background-size: 100% 4px, 100% 100%;
+    z-index: 9999;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: 0.97; }
+    5% { opacity: 0.95; }
+    10% { opacity: 0.97; }
+    15% { opacity: 0.94; }
+    20% { opacity: 0.97; }
+    100% { opacity: 0.97; }
+}
+
+/* Phosphor glow on text */
+h1, h2, h3, h4, .terminal-header, .result-item .value {
+    text-shadow: 
+        0 0 5px currentColor,
+        0 0 10px currentColor,
+        0 0 20px currentColor;
+    animation: text-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes text-glow {
+    from {
+        text-shadow: 
+            0 0 5px currentColor,
+            0 0 10px currentColor;
+    }
+    to {
+        text-shadow: 
+            0 0 10px currentColor,
+            0 0 20px currentColor,
+            0 0 30px currentColor;
+    }
+}
+
+/* Tape reel effect in corners */
+.pipboy-screen::before,
+.pipboy-screen::after {
+    content: "◉";
+    position: absolute;
+    color: var(--pipboy-green);
+    opacity: 0.3;
+    font-size: 2em;
+    z-index: 1;
+}
+
+.pipboy-screen::before {
+    top: 10px;
+    left: 10px;
+    animation: reel-spin 20s linear infinite;
+}
+
+.pipboy-screen::after {
+    bottom: 10px;
+    right: 10px;
+    animation: reel-spin 20s linear infinite reverse;
+}
+
+@keyframes reel-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Screen curvature effect */
+.screen-border {
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.screen-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        rgba(0, 255, 0, 0.05) 70%,
+        rgba(0, 255, 0, 0.1) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px var(--pipboy-glow);
+    }
+    50% {
+        box-shadow: 0 0 20px var(--pipboy-glow);
+    }
+}
+
+.glowing {
+    animation: glow 2s infinite;
+}
+
+/* Status Indicator */
+.status-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--pipboy-green);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Feedback Section */
+.feedback-section {
+    background-color: rgba(0, 20, 0, 0.5);
+    padding: 20px;
+    border: 1px solid var(--pipboy-border);
+    margin: 20px 0;
+    border-radius: 3px;
+}
+
+.feedback-section h3 {
+    color: var(--pipboy-highlight);
+    border-bottom: 1px solid var(--pipboy-green);
+    padding-bottom: 8px;
+    margin-top: 0;
+    text-transform: uppercase;
+}
+
+#feedback-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#feedback-list li {
+    padding: 10px;
+    margin: 8px 0;
+    background-color: rgba(0, 30, 0, 0.3);
+    border-left: 3px solid var(--pipboy-green);
+    animation: fadeIn 0.5s ease;
+    position: relative;
+}
+
+#feedback-list li::before {
+    content: '▶';
+    position: absolute;
+    left: 5px;
+    color: var(--pipboy-green);
+}

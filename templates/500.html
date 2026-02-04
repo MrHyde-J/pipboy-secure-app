@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}500 - System Error{% endblock %}
+
+{% block content %}
+<div class="terminal-header">
+    <h1>ERROR 500: SYSTEM MALFUNCTION</h1>
+    <div class="subtitle">VAULT-TEC TECHNICAL DIFFICULTIES</div>
+</div>
+
+<div class="text-center" style="margin: 50px 0;">
+    <h2 style="color: var(--pipboy-error);">CRITICAL SYSTEM FAILURE</h2>
+    <p>The Vault-Tec secure system has encountered an internal error.</p>
+    <p>Technical staff have been notified of the issue.</p>
+    
+    <div style="margin: 30px 0;">
+        <a href="{{ url_for('dashboard') }}" class="pipboy-btn">
+            ATTEMPT SYSTEM RECOVERY
+        </a>
+    </div>
+</div>
+{% endblock %}

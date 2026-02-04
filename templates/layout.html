@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pip-Boy 3000 // Vault-Tec Systems{% endblock %}</title>
+    
+    <!-- Font for digital display -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Inline critical CSS as fallback -->
+    <style>
+        /* CRITICAL PIP-BOY CSS - LOADS INSTANTLY */
+        :root {
+            --pipboy-green: #00FF00;
+            --pipboy-dark: #001a00;
+            --pipboy-darker: #000d00;
+            --pipboy-text: #00EE00;
+            --pipboy-highlight: #FFFF66;
+            --pipboy-glow: rgba(0, 255, 0, 0.5);
+            --pipboy-border: #006600;
+            --pipboy-screen: #002200;
+            --pipboy-bg: #000000;
+            --pipboy-error: #FF3300;
+            --pipboy-success: #00FF00;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--pipboy-bg) !important;
+            color: var(--pipboy-text) !important;
+            font-family: 'Courier New', 'Monaco', 'Share Tech Mono', monospace !important;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* CRT Effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: 
+                radial-gradient(
+                    ellipse at center,
+                    rgba(0, 0, 0, 0) 0%,
+                    rgba(0, 20, 0, 0.2) 100%
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 0, 0.03) 2px,
+                    rgba(0, 255, 0, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: overlay;
+            animation: flicker 0.15s infinite;
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            5% { opacity: 0.95; }
+            10% { opacity: 0.97; }
+            15% { opacity: 0.94; }
+            20% { opacity: 0.97; }
+            100% { opacity: 0.97; }
+        }
+        
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .pipboy-screen {
+            background-color: var(--pipboy-dark) !important;
+            border: 3px solid var(--pipboy-green) !important;
+            padding: 20px;
+            max-width: 900px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 0, 0.3),
+                inset 0 0 30px rgba(0, 255, 0, 0.1);
+            border-radius: 5px;
+        }
+        
+        .screen-border {
+            border: 1px solid var(--pipboy-green);
+            padding: 15px;
+            position: relative;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        /* Screen curvature effect */
+        .screen-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 30%,
+                rgba(0, 255, 0, 0.05) 70%,
+                rgba(0, 255, 0, 0.1) 100%
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(0, 255, 0, 0.03) 50%,
+                transparent 100%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+            animation: scanMove 20s linear infinite;
+        }
+        
+        @keyframes scanMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+        
+        /* Tape reel effect */
+        .pipboy-screen::before,
+        .pipboy-screen::after {
+            content: "◉";
+            position: absolute;
+            color: var(--pipboy-green);
+            opacity: 0.3;
+            font-size: 1.5em;
+            z-index: 1;
+        }
+        
+        .pipboy-screen::before {
+            top: 10px;
+            left: 10px;
+            animation: reel-spin 30s linear infinite;
+        }
+        
+        .pipboy-screen::after {
+            bottom: 10px;
+            right: 10px;
+            animation: reel-spin 30s linear infinite reverse;
+        }
+        
+        @keyframes reel-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--pipboy-green) !important;
+            text-shadow: 
+                0 0 5px currentColor,
+                0 0 10px currentColor;
+            font-family: 'Orbitron', 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+        }
+        
+        .terminal-header h1 {
+            animation: text-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes text-glow {
+            from {
+                text-shadow: 
+                    0 0 5px var(--pipboy-green),
+                    0 0 10px var(--pipboy-green);
+            }
+            to {
+                text-shadow: 
+                    0 0 10px var(--pipboy-green),
+                    0 0 20px var(--pipboy-green),
+                    0 0 30px var(--pipboy-green);
+            }
+        }
+        
+        .pipboy-input {
+            background-color: rgba(0, 30, 0, 0.8) !important;
+            border: 2px solid var(--pipboy-green) !important;
+            color: var(--pipboy-green) !important;
+            padding: 12px 15px;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .pipboy-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--pipboy-glow);
+            border-color: var(--pipboy-highlight);
+        }
+        
+        .pipboy-btn {
+            background-color: rgba(0, 50, 0, 0.8) !important;
+            border: 2px solid var(--pipboy-green) !important;
+            color: var(--pipboy-text) !important;
+            padding: 12px 25px;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin: 10px 5px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pipboy-btn:hover {
+            background-color: rgba(0, 70, 0, 0.9) !important;
+            border-color: var(--pipboy-highlight) !important;
+            color: var(--pipboy-highlight) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+        
+        .pipboy-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .pipboy-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .pipboy-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        a {
+            color: var(--pipboy-highlight) !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            text-shadow: 0 0 5px var(--pipboy-glow);
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid var(--pipboy-highlight);
+            background-color: rgba(0, 40, 0, 0.5);
+            border-radius: 3px;
+        }
+        
+        .vault-tec-logo pre {
+            color: var(--pipboy-text);
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        /* Status indicator */
+        .status-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            background-color: var(--pipboy-green);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+            box-shadow: 0 0 10px var(--pipboy-green);
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* Navigation */
+        .pipboy-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 2px solid var(--pipboy-green);
+            margin-bottom: 25px;
+            background-color: rgba(0, 30, 0, 0.3);
+            padding: 15px;
+            border-radius: 3px;
+        }
+        
+        .nav-item {
+            padding: 12px 25px;
+            text-decoration: none;
+            color: var(--pipboy-text) !important;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item:hover {
+            border-color: var(--pipboy-green);
+            background-color: rgba(0, 255, 0, 0.1);
+            text-shadow: 0 0 5px var(--pipboy-glow);
+            transform: translateY(-2px);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(0, 255, 0, 0.2);
+            border-color: var(--pipboy-green);
+            color: var(--pipboy-highlight) !important;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--pipboy-highlight);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-item:hover::after {
+            transform: translateX(0);
+        }
+        
+        /* Geiger Counter */
+        .geiger-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0.3;
+        }
+        
+        .geiger-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 2px;
+            background-color: var(--pipboy-error);
+            transform-origin: 0 50%;
+            transform: translateY(-50%) rotate(-45deg);
+            animation: geiger-sweep 4s ease-in-out infinite;
+        }
+        
+        @keyframes geiger-sweep {
+            0%, 100% { transform: translateY(-50%) rotate(-45deg); }
+            50% { transform: translateY(-50%) rotate(45deg); }
+        }
+        
+        /* Boot sequence */
+        .boot-sequence {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .boot-text {
+            color: var(--pipboy-green);
+            font-size: 1.1em;
+            text-align: center;
+            white-space: pre-wrap;
+            text-shadow: 0 0 10px var(--pipboy-green);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 30, 0, 0.3);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, 
+                var(--pipboy-green), 
+                var(--pipboy-highlight)
+            );
+            border-radius: 5px;
+            border: 2px solid rgba(0, 30, 0, 0.3);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, 
+                var(--pipboy-highlight), 
+                var(--pipboy-green)
+            );
+            box-shadow: 0 0 10px var(--pipboy-glow);
+        }
+    </style>
+    
+    <!-- Load external CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pipboy.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pipboy-ui.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300FF00%22>⚛️</text></svg>">
+</head>
+<body class="crt">
+    <!-- Geiger Counter -->
+    <div class="geiger-counter">
+        <div class="geiger-needle"></div>
+    </div>
+    
+    <div class="main-container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        <div class="pipboy-screen">
+            <div class="screen-border">
+                <div class="scanlines"></div>
+                
+                <!-- Navigation -->
+                {% if current_user.is_authenticated %}
+                <nav class="pipboy-nav">
+                    <a href="{{ url_for('dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                        STAT
+                    </a>
+                    <a href="{{ url_for('strength_tester') }}" class="nav-item {% if request.endpoint == 'strength_tester' %}active{% endif %}">
+                        APPS
+                    </a>
+                    {% if current_user.is_admin() %}
+                    <a href="{{ url_for('admin_panel') }}" class="nav-item {% if request.endpoint == 'admin_panel' %}active{% endif %}">
+                        DATA
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="nav-item">
+                        RADIO
+                    </a>
+                </nav>
+                {% endif %}
+
+                <!-- Page Header -->
+                <div class="terminal-header">
+                    <h1>{% block header %}PIP-BOY 3000 MK IV{% endblock %}</h1>
+                    <div class="subtitle">
+                        {% if current_user.is_authenticated %}
+                        USER: {{ current_user.username|upper }} | STATUS: OPERATIONAL
+                        {% else %}
+                        VAULT-TEC SECURE ACCESS TERMINAL
+                        {% endif %}
+                    </div>
+                    <div class="status-indicator"></div>
+                </div>
+
+                <!-- Page Content -->
+                {% block content %}{% endblock %}
+                
+                <!-- Footer -->
+                <div class="vault-tec-logo">
+                    <pre>
+    ╔══════════════════════════════════════════════╗
+    ║         VAULT-TEC INDUSTRIES               ║
+    ║         PIP-BOY 3000 MK IV                 ║
+    ║         FIRMWARE v2.1.7                    ║
+    ║         © 2077 Vault-Tec Corporation       ║
+    ╚══════════════════════════════════════════════╝
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/pipboy-effects.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pipboy-sounds.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/password-meter.js') }}"></script>
+    {% block scripts %}{% endblock %}
+    
+    <script>
+        // Initialize enhanced Pip-Boy effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Boot sequence only on first visit
+            if (!sessionStorage.getItem('pipboy_booted')) {
+                showBootSequence();
+                sessionStorage.setItem('pipboy_booted', 'true');
+            }
+            
+            // Random geiger clicks
+            setInterval(() => {
+                if (Math.random() < 0.05) { // 5% chance
+                    if (window.playSound) {
+                        window.playSound('geiger');
+                    }
+                }
+            }, 2000);
+        });
+        
+        function showBootSequence() {
+            const bootText = `
+╔══════════════════════════════════════════════╗
+║        VAULT-TEC INDUSTRIES BOOTLOADER      ║
+║              PIP-BOY 3000 MK IV             ║
+║              FIRMWARE v2.1.7                ║
+║                                              ║
+║  INITIALIZING SECURITY SUBSYSTEM...   [OK]  ║
+║  LOADING USER INTERFACE...            [OK]  ║
+║  CALIBRATING GEIGER COUNTER...        [OK]  ║
+║  SYNCING WITH VAULT NETWORK...        [OK]  ║
+║                                              ║
+║            WELCOME TO THE WASTELAND          ║
+╚══════════════════════════════════════════════╝
+`;
+            
+            const bootDiv = document.createElement('div');
+            bootDiv.className = 'boot-sequence';
+            bootDiv.innerHTML = `<pre class="boot-text">${bootText}</pre>`;
+            document.body.appendChild(bootDiv);
+            
+            // Type out boot sequence
+            const pre = bootDiv.querySelector('pre');
+            const originalText = pre.textContent;
+            pre.textContent = '';
+            let i = 0;
+            
+            function typeBoot() {
+                if (i < originalText.length) {
+                    pre.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeBoot, 30);
+                    
+                    // Add typing sound
+                    if (i % 3 === 0 && window.playSound) {
+                        window.playSound('click');
+                    }
+                } else {
+                    // Fade out after delay
+                    setTimeout(() => {
+                        bootDiv.style.opacity = '0';
+                        bootDiv.style.transition = 'opacity 1s';
+                        setTimeout(() => {
+                            bootDiv.remove();
+                            // Play startup sound
+                            if (window.playSound) {
+                                window.playSound('boot');
+                            }
+                        }, 1000);
+                    }, 2000);
+                }
+            }
+            
+            setTimeout(typeBoot, 500);
+        }
+    </script>
+</body>
+</html>

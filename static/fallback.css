@@ -1,0 +1,75 @@
+/* Fallback CSS - Always loads */
+:root {
+    --pipboy-green: #00FF00;
+    --pipboy-dark: #001100;
+    --pipboy-text: #00CC00;
+    --pipboy-highlight: #FFFF00;
+    --pipboy-bg: #000000;
+}
+
+/* Force black background and green text */
+body {
+    background-color: var(--pipboy-bg) !important;
+    color: var(--pipboy-text) !important;
+    font-family: 'Courier New', monospace !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    min-height: 100vh !important;
+}
+
+/* Force Pip-Boy screen */
+.pipboy-screen {
+    background-color: var(--pipboy-dark) !important;
+    border: 3px solid var(--pipboy-green) !important;
+    padding: 20px !important;
+    max-width: 900px !important;
+    margin: 20px auto !important;
+}
+
+/* Force headers to be green */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--pipboy-green) !important;
+}
+
+/* Force inputs to be Pip-Boy style */
+.pipboy-input {
+    background-color: rgba(0, 20, 0, 0.8) !important;
+    border: 2px solid var(--pipboy-green) !important;
+    color: var(--pipboy-green) !important;
+    padding: 10px !important;
+    font-family: 'Courier New', monospace !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Force buttons */
+.pipboy-btn {
+    background-color: rgba(0, 40, 0, 0.8) !important;
+    border: 2px solid var(--pipboy-green) !important;
+    color: var(--pipboy-text) !important;
+    padding: 10px 20px !important;
+    font-family: 'Courier New', monospace !important;
+    cursor: pointer !important;
+    text-transform: uppercase !important;
+}
+
+/* Force links */
+a {
+    color: var(--pipboy-highlight) !important;
+    text-decoration: none !important;
+}
+
+/* Force form elements */
+label {
+    color: var(--pipboy-text) !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+}
+
+/* Force alerts */
+.alert {
+    padding: 15px !important;
+    margin: 20px 0 !important;
+    border-left: 4px solid var(--pipboy-highlight) !important;
+    background-color: rgba(0, 40, 0, 0.5) !important;
+}

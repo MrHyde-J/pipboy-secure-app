@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block title %}Admin Panel // Vault-Tec System{% endblock %}
+
+{% block content %}
+<div class="terminal-header">
+    <h1>ADMINISTRATOR CONTROL PANEL</h1>
+    <div class="subtitle">VAULT-TEC SECURITY OVERRIDE // PRIVILEGED ACCESS</div>
+    <div class="status-indicator" style="animation: blink 1s infinite;"></div>
+</div>
+
+<div class="admin-panel">
+    <div class="admin-sidebar">
+        <h3 style="color: var(--pipboy-highlight); border-bottom: 1px solid var(--pipboy-green); padding-bottom: 10px;">
+            ADMIN ACTIONS
+        </h3>
+        <ul style="list-style: none; padding: 0; margin-top: 20px;">
+            <li style="margin: 15px 0;">
+                <a href="#users" style="color: var(--pipboy-text); text-decoration: none; display: block; padding: 10px; border-left: 3px solid var(--pipboy-green);">
+                    ▶ USER MANAGEMENT
+                </a>
+            </li>
+            <li style="margin: 15px 0;">
+                <a href="#logs" style="color: var(--pipboy-text); text-decoration: none; display: block; padding: 10px; border-left: 3px solid var(--pipboy-border);">
+                    ▶ SYSTEM LOGS
+                </a>
+            </li>
+            <li style="margin: 15px 0;">
+                <a href="#security" style="color: var(--pipboy-text); text-decoration: none; display: block; padding: 10px; border-left: 3px solid var(--pipboy-border);">
+                    ▶ SECURITY SETTINGS
+                </a>
+            </li>
+        </ul>
+        
+        <div class="alert alert-warning mt-40">
+            <strong>WARNING:</strong><br>
+            Administrator privileges provide complete system access. Use with extreme caution.
+        </div>
+    </div>
+
+    <div class="admin-content">
+        <section id="users">
+            <h2 style="color: var(--pipboy-highlight);">USER MANAGEMENT</h2>
+            <p>View and manage all registered users in the system.</p>
+            
+            <div class="user-list">
+                {% for user in users %}
+                <div class="user-item {% if user.role == 'admin' %}admin{% endif %}">
+                    <div>
+                        <strong style="color: var(--pipboy-highlight);">{{ user.username }}</strong>
+                        <div style="color: #88FF88; font-size: 0.9em;">{{ user.email }}</div>
+                        <div style="font-size: 0.8em; color: var(--pipboy-text);">
+                            Created: {{ user.created_at.strftime('%Y-%m-%d') }}
+                            {% if user.last_login %}
+                            | Last Login: {{ user.last_login.strftime('%Y-%m-%d %H:%M') }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="user-role {% if user.role == 'admin' %}badge-admin{% else %}badge-user{% endif %}">
+                            {{ user.role|upper }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="alert alert-info mt-20">
+                <strong>Total Users:</strong> {{ users|length }} ({{ users|selectattr('role', 'equalto', 'admin')|list|length }} admins, {{ users|selectattr('role', 'equalto', 'user')|list|length }} users)
+            </div>
+        </section>
+        
+        <section id="security" class="mt-40">
+            <h2 style="color: var(--pipboy-highlight);">SECURITY OVERVIEW</h2>
+            <div class="result-grid">
+                <div class="result-item">
+                    <span class="label">ACTIVE SESSIONS:</span>
+                    <span class="value">{{ sessions|default('1', true) }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">FAILED LOGINS:</span>
+                    <span class="value">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">PASSWORD HASHING:</span>
+                    <span class="value">PBKDF2-SHA256</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">INPUT SANITIZATION:</span>
+                    <span class="value" style="color: #00FF00;">ACTIVE</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="vault-tec-logo mt-40">
+    <pre>
+╔═══════════════════════════════════════════════════════╗
+║   VAULT-TEC ADMINISTRATIVE OVERRIDE ACTIVE           ║
+║   All actions are logged and monitored                ║
+║   Unauthorized access is prohibited                   ║
+║   © 2077 Vault-Tec Security Division                 ║
+╚═══════════════════════════════════════════════════════╝
+    </pre>
+</div>
+{% endblock %}

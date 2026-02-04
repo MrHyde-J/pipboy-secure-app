@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}403 - Access Denied{% endblock %}
+
+{% block content %}
+<div class="terminal-header">
+    <h1>ERROR 403: ACCESS DENIED</h1>
+    <div class="subtitle">VAULT-TEC SECURITY OVERRIDE</div>
+</div>
+
+<div class="text-center" style="margin: 50px 0;">
+    <h2 style="color: var(--pipboy-error);">INSUFFICIENT CLEARANCE</h2>
+    <p>Your current security clearance does not permit access to this terminal.</p>
+    
+    <div style="margin: 30px 0;">
+        <a href="{{ url_for('dashboard') }}" class="pipboy-btn">
+            RETURN TO DASHBOARD
+        </a>
+    </div>
+</div>
+{% endblock %}

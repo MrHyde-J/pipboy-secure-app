@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard // Pip-Boy 3000{% endblock %}
+
+{% block header %}PIP-BOY 3000 MK IV{% endblock %}
+
+{% block content %}
+<style>
+    /* Scannable Pip-Boy UI */
+    .status-bar { display: flex; justify-content: space-between; margin-bottom: 20px; border: 1px solid #00FF00; padding: 10px; background: rgba(0, 40, 0, 0.2); }
+    .pipboy-tabs { display: flex; border-bottom: 2px solid #00FF00; margin-bottom: 20px; }
+    .pipboy-tab { padding: 10px 15px; cursor: pointer; color: #00CC00; text-transform: uppercase; font-weight: bold; }
+    .pipboy-tab.active { background: rgba(0, 255, 0, 0.2); color: #FFFF00; border: 1px solid #00FF00; border-bottom: none; }
+    .tab-content { display: none; border: 1px solid #00FF00; padding: 20px; background: rgba(0, 10, 0, 0.6); }
+    .tab-content.active { display: block; }
+    .stat-row { padding: 10px; border-left: 3px solid #00FF00; margin: 5px 0; background: rgba(0, 255, 0, 0.05); }
+</style>
+
+<div class="status-bar">
+    <span>RADS: 0</span>
+    <span>HP: 100/100</span>
+    <span>AP: 85/85</span>
+</div>
+
+<div class="pipboy-tabs">
+    <div class="pipboy-tab active" onclick="uiTab(this, 'tab-stat')">STAT</div>
+    <div class="pipboy-tab" onclick="uiTab(this, 'tab-inv')">INV</div>
+    <div class="pipboy-tab" onclick="uiTab(this, 'tab-data')">DATA</div>
+</div>
+
+<div id="tab-stat" class="tab-content active">
+    <div class="stat-row">NAME: {{ current_user.username|default('Wanderer') }}</div>
+    
+    {# Safe check for Role #}
+    <div class="stat-row">ROLE: 
+        {% if current_user.role %}{{ current_user.role|upper }}
+        {% elif current_user.access %}{{ current_user.access|upper }}
+        {% else %}CITIZEN{% endif %}
+    </div>
+
+    {# Safe Logout Link #}
+    <div class="stat-row" style="margin-top:20px; color:#FF3300; cursor:pointer;" 
+         onclick="window.location.href='/logout'">
+         [ TERMINATE CONNECTION ]
+    </div>
+</div>
+
+<div id="tab-inv" class="tab-content">
+    <p style="color:#FFFF00;">-- RECENT HOLLOTAPES --</p>
+    
+    {# Using a hard link to avoid url_for errors if the route name is wrong #}
+    <div class="stat-row" onclick="window.location.href='/strength_tester'">
+        ▶ PASSWORD ANALYZER
+    </div>
+
+    {% if current_user.is_admin is defined and current_user.is_admin %}
+    <div class="stat-row" onclick="window.location.href='/admin_panel'">
+        ▶ ADMIN OVERRIDE
+    </div>
+    {% endif %}
+</div>
+
+<div id="tab-data" class="tab-content">
+    <p>VAULT-TEC OS v4.1.2</p>
+    <p>No new messages in local buffer.</p>
+</div>
+
+<script>
+    function uiTab(btn, tabId) {
+        // Hide all
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.pipboy-tab').forEach(b => b.classList.remove('active'));
+        
+        // Show target
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+    }
+</script>
+{% endblock %}

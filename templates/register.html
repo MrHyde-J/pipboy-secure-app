@@ -1,0 +1,181 @@
+{% extends "layout.html" %}
+
+{% block title %}Registration // Vault-Tec System{% endblock %}
+
+{% block content %}
+<div class="auth-form">
+    <div class="terminal-header">
+        <h1>NEW USER REGISTRATION</h1>
+        <div class="subtitle">VAULT-TEC SECURITY PROTOCOL</div>
+        <div class="status-indicator"></div>
+    </div>
+
+    <form method="POST" action="{{ url_for('register') }}">
+        <div class="form-group">
+            <label for="username">USERNAME:</label>
+            <div class="input-group">
+                <input type="text" 
+                       id="username" 
+                       name="username" 
+                       class="pipboy-input" 
+                       placeholder="ENTER USERNAME" 
+                       required
+                       minlength="3"
+                       maxlength="50">
+                <div class="input-beep"></div>
+            </div>
+            <small style="color: #88FF88; font-size: 0.8em;">3-50 characters, letters and numbers only</small>
+        </div>
+
+        <div class="form-group">
+            <label for="email">EMAIL:</label>
+            <div class="input-group">
+                <input type="email" 
+                       id="email" 
+                       name="email" 
+                       class="pipboy-input" 
+                       placeholder="ENTER EMAIL" 
+                       required>
+                <div class="input-beep"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">PASSWORD:</label>
+            <div class="input-group">
+                <input type="password" 
+                       id="password" 
+                       name="password" 
+                       class="pipboy-input" 
+                       placeholder="ENTER PASSWORD" 
+                       required
+                       minlength="8"
+                       oninput="checkPasswordStrength(this.value)">
+                <div class="input-beep"></div>
+                <button type="button" class="password-toggle">👁️</button>
+            </div>
+            
+            <!-- Password Strength Meter -->
+            <div class="strength-meter mt-20" id="strength-meter" style="display: none;">
+                <div class="meter-visual">
+                    <div class="meter-bar" id="register-meter-bar"></div>
+                    <div class="meter-glow" id="register-meter-glow"></div>
+                </div>
+                <div class="meter-labels">
+                    <span>FAIL</span>
+                    <span>WEAK</span>
+                    <span>FAIR</span>
+                    <span>GOOD</span>
+                    <span>STRONG</span>
+                </div>
+                <div id="password-feedback" style="margin-top: 10px; font-size: 0.9em;"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">CONFIRM PASSWORD:</label>
+            <div class="input-group">
+                <input type="password" 
+                       id="confirm_password" 
+                       name="confirm_password" 
+                       class="pipboy-input" 
+                       placeholder="RE-ENTER PASSWORD" 
+                       required>
+                <div class="input-beep"></div>
+                <button type="button" class="password-toggle">👁️</button>
+            </div>
+            <div id="password-match" style="margin-top: 5px;"></div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="pipboy-btn pipboy-btn-primary" style="width: 100%;" id="submit-btn">
+                REGISTER USER
+            </button>
+        </div>
+
+        <div class="text-center" style="margin-top: 30px;">
+            <a href="{{ url_for('login') }}" style="color: var(--pipboy-highlight); text-decoration: none;">
+                [ EXISTING USER LOGIN ]
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/password-meter.js') }}"></script>
+<script>
+    function checkPasswordStrength(password) {
+        const meter = document.getElementById('strength-meter');
+        const meterBar = document.getElementById('register-meter-bar');
+        const meterGlow = document.getElementById('register-meter-glow');
+        const feedback = document.getElementById('password-feedback');
+        
+        if (password.length > 0) {
+            meter.style.display = 'block';
+            
+            // Use the PasswordStrengthMeter class
+            if (window.passwordMeter) {
+                const analysis = window.passwordMeter.calculateStrength(password);
+                
+                // Update meter
+                meterBar.style.width = `${analysis.score}%`;
+                meterBar.style.backgroundColor = analysis.color;
+                meterGlow.style.boxShadow = `inset 0 0 10px ${analysis.color}`;
+                
+                // Update feedback
+                feedback.innerHTML = `<strong style="color: ${analysis.color}">${analysis.category}</strong><br>`;
+                analysis.feedback.forEach(item => {
+                    feedback.innerHTML += `<span style="color: #88FF88">• ${item}</span><br>`;
+                });
+                
+                // Disable submit if password is too weak
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = analysis.score < 50;
+                submitBtn.title = analysis.score < 50 ? 'Password must be at least "MODERATE" strength' : '';
+            }
+        } else {
+            meter.style.display = 'none';
+        }
+        
+        // Check password match
+        checkPasswordMatch();
+    }
+    
+    function checkPasswordMatch() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        const matchDiv = document.getElementById('password-match');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        if (confirmPassword.length === 0) {
+            matchDiv.innerHTML = '';
+            return;
+        }
+        
+        if (password === confirmPassword) {
+            matchDiv.innerHTML = '<span style="color: #00FF00">✓ PASSWORDS MATCH</span>';
+            submitBtn.disabled = false;
+        } else {
+            matchDiv.innerHTML = '<span style="color: #FF3300">✗ PASSWORDS DO NOT MATCH</span>';
+            submitBtn.disabled = true;
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const confirmInput = document.getElementById('confirm_password');
+        confirmInput.addEventListener('input', checkPasswordMatch);
+        
+        // Initialize password strength check
+        const passwordInput = document.getElementById('password');
+        passwordInput.addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+        
+        // Check on page load if there's already text
+        if (passwordInput.value) {
+            checkPasswordStrength(passwordInput.value);
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}Login // Vault-Tec System{% endblock %}
+
+{% block content %}
+<div class="auth-form">
+    <div class="terminal-header">
+        <h1>VAULT-TEC SECURE ACCESS</h1>
+        <div class="subtitle">PIP-BOY 3000 TERMINAL</div>
+        <div class="status-indicator"></div>
+    </div>
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+        
+        <div class="form-group">
+            <label for="username">USERNAME:</label>
+            <div class="input-group">
+                <input type="text" 
+                       id="username" 
+                       name="username" 
+                       class="pipboy-input" 
+                       placeholder="ENTER USERNAME" 
+                       required
+                       autofocus>
+                <div class="input-beep"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">PASSWORD:</label>
+            <div class="input-group">
+                <input type="password" 
+                       id="password" 
+                       name="password" 
+                       class="pipboy-input" 
+                       placeholder="ENTER PASSWORD" 
+                       required>
+                <div class="input-beep"></div>
+                <button type="button" class="password-toggle">👁️</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="pipboy-btn pipboy-btn-primary" style="width: 100%;">
+                ACCESS TERMINAL
+            </button>
+        </div>
+
+        <div class="text-center" style="margin-top: 30px;">
+            <a href="{{ url_for('register') }}" style="color: var(--pipboy-highlight); text-decoration: none;">
+                [ NEW USER REGISTRATION ]
+            </a>
+        </div>
+    </form>
+
+    <div class="alert alert-info mt-20">
+        <strong>TEST ACCOUNTS:</strong><br>
+        Admin: vault_admin / Vault-Tec2077!<br>
+        User: wastelander / NCR!2024
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add form submission sound
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function() {
+            if (window.playSound) playSound('beep');
+        });
+    });
+</script>
+{% endblock %}

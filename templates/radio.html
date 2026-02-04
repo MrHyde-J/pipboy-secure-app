@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block title %}Pip-Boy Radio // Vault-Tec{% endblock %}
+
+{% block header %}PIP-BOY RADIO RECEIVER{% endblock %}
+
+{% block content %}
+<div class="radio-tuner" style="max-width: 600px; margin: 40px auto;">
+    <div class="tuner-frequency" id="current-frequency">108.5 FM</div>
+    <div class="tuner-dial" id="tuner-dial">
+        <div class="tuner-knob" id="tuner-knob" style="left: 75%"></div>
+    </div>
+    <div id="station-info" style="text-align: center; margin-top: 30px; min-height: 100px;">
+        <h3 style="color: var(--pipboy-highlight);">VAULT-TEC SECURITY</h3>
+        <p>Encrypted transmission channel</p>
+        <p style="font-size: 0.9em; color: #88FF88;">STATUS: MONITORING</p>
+    </div>
+</div>
+
+<div class="station-list" style="margin-top: 40px;">
+    <h2>AVAILABLE STATIONS:</h2>
+    <div class="inventory-list">
+        {% for station in stations %}
+        <div class="inventory-item station-item" data-freq="{{ station.freq.split(' ')[0] }}" data-name="{{ station.name }}" data-desc="{{ station.desc }}">
+            <strong>{{ station.name }}</strong> - {{ station.freq }}
+            <span style="float: right; color: #88FF88; font-size: 0.9em;">▶ TUNE</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <a href="{{ url_for('dashboard') }}" class="pipboy-btn">BACK TO DASHBOARD</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tunerKnob = document.getElementById('tuner-knob');
+    const tunerDial = document.getElementById('tuner-dial');
+    const frequencyDisplay = document.getElementById('current-frequency');
+    const stationInfo = document.getElementById('station-info');
+    
+    const stations = [
+        {freq: 97.2, name: "Galaxy News Radio", desc: "Three Dog, AWOOOO!"},
+        {freq: 102.5, name: "Enclave Radio", desc: "Truth is on the airwaves."},
+        {freq: 108.5, name: "Vault-Tec Emergency", desc: "Security broadcasts only."},
+        {freq: 95.3, name: "Mojave Music Radio", desc: "Big Iron on his hip..."},
+    ];
+    
+    let currentFreq = 108.5;
+    let isDragging = false;
+    
+    // Station items click
+    document.querySelectorAll('.station-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const freq = parseFloat(this.dataset.freq);
+            tuneToFrequency(freq);
+            
+            stationInfo.innerHTML = `
+                <h3 style="color: var(--pipboy-highlight);">${this.dataset.name}</h3>
+                <p>${this.dataset.desc}</p>
+                <p style="font-size: 0.9em; color: #88FF88;">NOW PLAYING</p>
+            `;
+            
+            if (window.playSound) window.playSound('tab');
+        });
+    });
+    
+    // Manual tuning
+    if (tunerKnob && tunerDial) {
+        tunerKnob.addEventListener('mousedown', startDragging);
+        document.addEventListener('mousemove', handleDrag);
+        document.addEventListener('mouseup', stopDragging);
+        tunerKnob.addEventListener('touchstart', startDragging);
+        document.addEventListener('touchmove', handleDrag);
+        document.addEventListener('touchend', stopDragging);
+    }
+    
+    function startDragging(e) {
+        isDragging = true;
+        document.body.style.cursor = 'grabbing';
+        if (window.playSound) window.playSound('beep');
+        e.preventDefault();
+    }
+    
+    function handleDrag(e) {
+        if (!isDragging) return;
+        
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        if (!clientX) return;
+        
+        const dialRect = tunerDial.getBoundingClientRect();
+        let x = clientX - dialRect.left;
+        x = Math.max(0, Math.min(x, dialRect.width));
+        
+        const percentage = (x / dialRect.width) * 100;
+        tunerKnob.style.left = percentage + '%';
+        
+        // Calculate frequency (87.5 - 108.0 MHz)
+        const frequency = 87.5 + (percentage / 100) * 20.5;
+        tuneToFrequency(frequency);
+        
+        // Play static when between stations
+        if (Math.random() < 0.2 && window.playSound) {
+            window.playSound('static');
+        }
+    }
+    
+    function stopDragging() {
+        if (isDragging) {
+            isDragging = false;
+            document.body.style.cursor = '';
+            if (window.playSound) window.playSound('click');
+            
+            // Snap to nearest station
+            let nearestStation = stations[0];
+            let minDiff = Math.abs(currentFreq - stations[0].freq);
+            
+            stations.forEach(station => {
+                const diff = Math.abs(currentFreq - station.freq);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    nearestStation = station;
+                }
+            });
+            
+            if (minDiff < 0.5) {
+                tuneToFrequency(nearestStation.freq);
+                stationInfo.innerHTML = `
+                    <h3 style="color: var(--pipboy-highlight);">${nearestStation.name}</h3>
+                    <p>${nearestStation.desc}</p>
+                    <p style="font-size: 0.9em; color: #88FF88;">SIGNAL ACQUIRED</p>
+                `;
+            } else {
+                stationInfo.innerHTML = `
+                    <h3 style="color: #FF9900;">STATIC</h3>
+                    <p>No station acquired</p>
+                    <p style="font-size: 0.9em; color: #FF9900;">ADJUST FREQUENCY</p>
+                `;
+            }
+        }
+    }
+    
+    function tuneToFrequency(freq) {
+        currentFreq = Math.round(freq * 10) / 10;
+        frequencyDisplay.textContent = currentFreq.toFixed(1) + ' FM';
+        
+        // Update knob position
+        const percentage = ((currentFreq - 87.5) / 20.5) * 100;
+        tunerKnob.style.left = percentage + '%';
+    }
+});
+</script>
+{% endblock %}
